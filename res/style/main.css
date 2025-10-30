@@ -1,0 +1,123 @@
+/* --- Základní body --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f7f7f7;
+    color: #222;
+    margin: 0;
+    padding: 20px;
+}
+
+#content {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.05);
+}
+
+/* --- Headery --- */
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+    margin: 1em 0 0.5em 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+#content h1 { font-size: 2em; }
+#content h2 { font-size: 1.75em; }
+#content h3 { font-size: 1.5em; }
+#content h4 { font-size: 1.25em; }
+#content h5 { font-size: 1em; }
+#content h6 { font-size: 0.9em; }
+
+/* --- Odstavce --- */
+#content p {
+    margin: 0.5em 0;
+    line-height: 1.6;
+}
+
+/* --- Bold / Italic --- */
+#content b {
+    font-weight: bold;
+}
+#content i {
+    font-style: italic;
+}
+
+/* --- Odkazy --- */
+#content a {
+    color: #0366d6;
+    text-decoration: none;
+}
+#content a:hover {
+    text-decoration: underline;
+}
+
+/* --- Obrázky --- */
+#content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
+/* --- Citace --- */
+#content blockquote {
+    border-left: 3px solid #ccc;
+    padding-left: 12px;
+    margin: 10px 0;
+    color: #555;
+    background: #f9f9f9;
+}
+
+/* --- Seznamy --- */
+#content ul, #content ol {
+    margin: 0.5em 0 0.5em 1.5em;
+    padding-left: 0;
+}
+
+#content ul li, #content ol li {
+    margin: 0.25em 0;
+}
+
+/* --- Nested listy --- */
+#content ul ul, #content ol ol, #content ul ol, #content ol ul {
+    margin-left: 1.5em;
+}
+
+/* --- Tabulky --- */
+#content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+}
+
+#content th, #content td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+#content th {
+    background-color: #f3f3f3;
+    font-weight: 600;
+}
+
+/* --- Inline code a kódové bloky (volitelné) --- */
+#content code {
+    background: #f3f3f3;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95em;
+}
+
+#content pre {
+    background: #f3f3f3;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: monospace;
+    margin: 10px 0;
+}
