@@ -4,12 +4,11 @@ body {
     background-color: #f7f7f7;
     color: #222;
     margin: 0;
-    padding: 20px;
 }
 
 #content {
     max-width: 900px;
-    margin: 0 auto;
+    margin: 20px auto;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -120,4 +119,15 @@ body {
     overflow-x: auto;
     font-family: monospace;
     margin: 10px 0;
+}
+
+.footer {
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+}
+
+.footer > a {
+    color: rgba(128,128,128,1) !important;
+    transition: ease-in-out .2s;
 }
