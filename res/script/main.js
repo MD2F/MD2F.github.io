@@ -1,12 +1,27 @@
 const contentEl = document.getElementById('content');
-const defaultMd = '/res/md/default.md'; // root-relative
+const defaultMd = '/res/md/default.md';
 
+// --- Funkce pro načtení custom theme ---
+function loadTheme() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const theme = urlParams.get('theme');
+    
+    // Nedělej nic, pokud je RAW stránka
+    if (!theme || window.location.pathname.includes('/raw/')) return;
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `/res/css/${theme}.css`;
+    document.head.appendChild(link);
+}
+
+// --- Funkce pro získání base path podle umístění HTML ---
 function getBasePath() {
-    // pokud je index.html v podadresáři (např. /html/), vrátíme "/html/"
     const path = window.location.pathname;
     return path.substring(0, path.lastIndexOf('/') + 1);
 }
 
+// --- Načtení hlavního Markdown ---
 async function loadMarkdown() {
     const urlParams = new URLSearchParams(window.location.search);
     let mdUrl = urlParams.get('url');
@@ -25,6 +40,7 @@ async function loadMarkdown() {
     await loadMarkdownTo('content', mdUrl);
 }
 
+// --- Funkce pro otevření RAW / HTML ---
 let open_raw = () => {
     const urlParams = new URLSearchParams(window.location.search);
     let mdUrl = urlParams.get('url') || defaultMd;
@@ -37,6 +53,7 @@ let open_html = () => {
     window.open(getBasePath() + 'html/?url=' + mdUrl, '_self');
 }
 
+// --- Escapování speciálních znaků v code blocích ---
 function escapeCode(text) {
     return text
         .replace(/&/g, "&amp;")
@@ -52,16 +69,20 @@ function escapeCode(text) {
         .replace(/\)/g, "&#41;");
 }
 
+// ✅ Univerzální funkce pro načtení markdownu do elementu
 async function loadMarkdownTo(elementId, mdUrl) {
     const targetEl = document.getElementById(elementId);
-    if (!targetEl) return;
+    if (!targetEl) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
 
-    // JSON patterns vždy z root
+    // Načtení patternů z JSON (vždy root-relative)
     const patternResp = await fetch('/res/assets/markdown.json');
     const patternJson = await patternResp.json();
     const patterns = patternJson.patterns;
 
-    // načtení MD, fallback 404
+    // Načtení Markdown souboru, fallback na 404
     let markdownText = '';
     try {
         const resp = await fetch(mdUrl);
@@ -72,7 +93,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
         markdownText = await fallback.text();
     }
 
-    // escapování code bloků a inline code
+    // --- Escapování code bloků a inline code ---
     markdownText = markdownText.replace(/```(\w*)\n([\s\S]*?)```/gm, (match, lang, code) => {
         return `<pre><code class='${lang}'>${escapeCode(code)}</code></pre>`;
     });
@@ -80,7 +101,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
         return `<code>${escapeCode(code)}</code>`;
     });
 
-    // ostatní patterny
+    // --- Aplikace patternů ---
     patterns.forEach(p => {
         if (p.pattern.startsWith("```") || p.pattern.startsWith("`")) return;
 
@@ -106,6 +127,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
                 let html = "<table><thead><tr>";
                 headers.forEach(h => html += `<th>${h}</th>`);
                 html += "</tr></thead><tbody>";
+
                 const rowLines = rows.trim().split("\n");
                 rowLines.forEach(r => {
                     const cells = r.split("|").map(c => c.trim()).filter(c => c.length > 0);
@@ -114,6 +136,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
                     cells.forEach(c => html += `<td>${c}</td>`);
                     html += "</tr>";
                 });
+
                 html += "</tbody></table>";
                 return html;
             });
@@ -131,7 +154,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
         }
     });
 
-    // automatické odstavce
+    // --- Automatické odstavce ---
     markdownText = markdownText.split(/\n{2,}/).map(block => {
         block = block.trim();
         if (block.match(/^(<h\d|<ul|<ol|<blockquote|<pre|<table|<hr|<img)/)) return block;
@@ -141,4 +164,6 @@ async function loadMarkdownTo(elementId, mdUrl) {
     targetEl.innerHTML += markdownText;
 }
 
+// --- Start ---
+loadTheme();
 loadMarkdown();
