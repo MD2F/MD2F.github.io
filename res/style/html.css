@@ -1,54 +1,42 @@
-/* --- Základní body --- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #fff;
     color: #222;
     margin: 0;
-}
-.md-content {
     position: relative;
+    max-width: 900px;
+    margin: 20px auto;
     padding: 20px 20px 44px;
 }
-
-/* --- Headery --- */
-.md-content h1, .md-content h2, .md-content h3, .md-content h4, .md-content h5, .md-content h6 {
+h1, h2, h3, h4, h5, h6 {
     margin: 1em 0 0.5em 0;
     font-weight: 600;
     line-height: 1.3;
 }
-
-.md-content h1 { font-size: 2em; }
-.md-content h2 { font-size: 1.75em; }
-.md-content h3 { font-size: 1.5em; }
-.md-content h4 { font-size: 1.25em; }
-.md-content h5 { font-size: 1em; }
-.md-content h6 { font-size: 0.9em; }
-
-/* --- Odstavce --- */
-.md-content p {
+h1 { font-size: 2em; }
+h2 { font-size: 1.75em; }
+h3 { font-size: 1.5em; }
+h4 { font-size: 1.25em; }
+h5 { font-size: 1em; }
+h6 { font-size: 0.9em; }
+p {
     margin: 0.5em 0;
     line-height: 1.6;
 }
-
-/* --- Bold / Italic --- */
-.md-content b {
+b {
     font-weight: bold;
 }
-.md-content i {
+i {
     font-style: italic;
 }
-
-/* --- Odkazy --- */
-.md-content a {
+a {
     color: #0366d6;
     text-decoration: none;
 }
-.md-content a:hover {
+a:hover {
     text-decoration: underline;
 }
-
-/* --- Obrázky --- */
-.md-content img {
+img {
     max-width: 100%;
     height: auto;
     display: block;
@@ -56,8 +44,7 @@ body {
     border-radius: 4px;
 }
 
-/* --- Citace --- */
-.md-content blockquote {
+blockquote {
     border-left: 3px solid #ccc;
     padding-left: 12px;
     margin: 10px 0;
@@ -65,49 +52,38 @@ body {
     background: #f9f9f9;
 }
 
-/* --- Seznamy --- */
-.md-content ul, .md-content ol {
+ul, ol {
     margin: 0.5em 0 0.5em 1.5em;
     padding-left: 0;
 }
-
-.md-content ul li, .md-content ol li {
+ul li, ol li {
     margin: 0.25em 0;
 }
-
-/* --- Nested listy --- */
-.md-content ul ul, .md-content ol ol, .md-content ul ol, .md-content ol ul {
+ul ul, ol ol, ul ol, ol ul {
     margin-left: 1.5em;
 }
-
-/* --- Tabulky --- */
-.md-content table {
+table {
     border-collapse: collapse;
     width: 100%;
     margin: 10px 0;
 }
-
-.md-content th, .md-content td {
+th, td {
     border: 1px solid #ccc;
     padding: 8px 12px;
     text-align: left;
 }
-
-.md-content th {
+th {
     background-color: #f3f3f3;
     font-weight: 600;
 }
-
-/* --- Inline code a kódové bloky (volitelné) --- */
-.md-content code {
+code {
     background: #f3f3f3;
     padding: 2px 4px;
     border-radius: 4px;
     font-family: monospace;
     font-size: 0.95em;
 }
-
-.md-content pre {
+pre {
     background: #f3f3f3;
     padding: 10px;
     border-radius: 4px;

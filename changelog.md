@@ -1,5 +1,16 @@
 ### Changelog
 
+#### Version 1.2
+
+##### Added
+
+- Added downloadable HTML
+- Added custom icons for copy urls
+
+##### Fixed
+
+- Fixed copy url functions
+
 #### Version 1.1
 
 ##### Added

@@ -1,4 +1,3 @@
-/* --- Základní body --- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #f7f7f7;
@@ -44,7 +43,7 @@ body {
     background: rgba(0,0,0,0.05);
 }
 
-.content-menu div {
+.content-menu > div {
     padding: 8px;
     font-size: 12px;
     background: white;
@@ -55,16 +54,88 @@ body {
     transition: .2s;
     font-weight: 600;
     border-top: 2px solid transparent;
+    position: relative;
 }
 
-.content-menu div:hover {
+.content-menu > div:hover {
     border-top: 2px solid #0366d6;
     background: rgba(0,0,0,0.0);
 }
 
-.content-menu div svg {
+.content-menu > div > svg {
     height: 16px;
     fill: black;
+}
+
+.content-menu-share-btn:hover > .content-menu-share, .content-menu-share-btn:focus-within > .content-menu-share {
+    padding: 12px;
+    height: 280px;
+}
+
+.content-menu-share {
+    z-index: 99;
+    font-weight: 500;
+    font-size: 12px;
+    height: 0;
+    transition: .2s;
+    overflow: hidden;
+    position: absolute;
+    top: 32px;
+    right: 0px;
+    background: #fff;
+    padding: 0 12px;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: auto;
+}
+
+.content-menu-share > span {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.content-menu-share > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.content-menu-share > div > div {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.content-menu-share > div > div > input {
+    padding: 2px 4px;
+    width: 220px;
+}
+
+.content-menu-share > div > div > button {
+    background: 0;
+    border: 0;
+    transition: .2s;
+    padding: 4px;
+    aspect-ratio: 1/1;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.content-menu-share > div > div > button > svg {
+    fill: black;
+    height: 18px;
+}
+
+.checkButton {
+    fill: #0366d6;
+}
+
+.content-menu-share > div > div > button:hover {
+    background: rgba(0,0,0,0.1);
+    transition: .2s;
 }
 
 .md-content {

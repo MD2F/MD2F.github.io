@@ -1,12 +1,33 @@
 const contentEl = document.getElementById('content');
 const defaultMd = '/res/md/default.md';
+const baseUrl = "https://md2f.github.io";
+const checkSvg = '<svg class="checkButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"/></svg>'
 
-// --- Funkce pro načtení custom theme ---
+const copyFrom = (elementId, buttonEl) => {
+    const inputEl = document.getElementById(elementId);
+    const value = inputEl.value;
+
+    navigator.clipboard.writeText(value)
+        .then(() => {
+            if (buttonEl) {
+                const originalSvg = buttonEl.innerHTML;
+
+                buttonEl.innerHTML = checkSvg;
+
+                setTimeout(() => {
+                    buttonEl.innerHTML = originalSvg;
+                }, 1000);
+            }
+        })
+        .catch(err => {
+            console.error("Copy error: ", err);
+        });
+}
+
 function loadTheme() {
     const urlParams = new URLSearchParams(window.location.search);
     const theme = urlParams.get('theme');
     
-    // Nedělej nic, pokud je RAW stránka
     if (!theme || window.location.pathname.includes('/raw/')) return;
 
     const link = document.createElement('link');
@@ -15,13 +36,11 @@ function loadTheme() {
     document.head.appendChild(link);
 }
 
-// --- Funkce pro získání base path podle umístění HTML ---
 function getBasePath() {
     const path = window.location.pathname;
     return path.substring(0, path.lastIndexOf('/') + 1);
 }
 
-// --- Načtení hlavního Markdown ---
 async function loadMarkdown() {
     const urlParams = new URLSearchParams(window.location.search);
     let mdUrl = urlParams.get('url');
@@ -38,9 +57,14 @@ async function loadMarkdown() {
     }
 
     await loadMarkdownTo('content', mdUrl);
+
+    if (document.getElementById('inputUrl')) {
+        document.getElementById('inputUrl').value = baseUrl + "/?url=" + mdUrl
+        document.getElementById('inputUrlRaw').value = baseUrl + "/raw/?url=" + mdUrl
+        document.getElementById('inputUrlHtml').value = baseUrl + "/html/?url=" + mdUrl
+    }
 }
 
-// --- Funkce pro otevření RAW / HTML ---
 let open_raw = () => {
     const urlParams = new URLSearchParams(window.location.search);
     let mdUrl = urlParams.get('url') || defaultMd;
@@ -53,7 +77,6 @@ let open_html = () => {
     window.open(getBasePath() + 'html/?url=' + mdUrl, '_self');
 }
 
-// --- Escapování speciálních znaků v code blocích ---
 function escapeCode(text) {
     return text
         .replace(/&/g, "&amp;")
@@ -69,7 +92,6 @@ function escapeCode(text) {
         .replace(/\)/g, "&#41;");
 }
 
-// ✅ Univerzální funkce pro načtení markdownu do elementu
 async function loadMarkdownTo(elementId, mdUrl) {
     const targetEl = document.getElementById(elementId);
     if (!targetEl) {
@@ -77,12 +99,10 @@ async function loadMarkdownTo(elementId, mdUrl) {
         return;
     }
 
-    // Načtení patternů z JSON (vždy root-relative)
     const patternResp = await fetch('/res/assets/markdown.json');
     const patternJson = await patternResp.json();
     const patterns = patternJson.patterns;
 
-    // Načtení Markdown souboru, fallback na 404
     let markdownText = '';
     try {
         const resp = await fetch(mdUrl);
@@ -93,7 +113,6 @@ async function loadMarkdownTo(elementId, mdUrl) {
         markdownText = await fallback.text();
     }
 
-    // --- Escapování code bloků a inline code ---
     markdownText = markdownText.replace(/```(\w*)\n([\s\S]*?)```/gm, (match, lang, code) => {
         return `<pre><code class='${lang}'>${escapeCode(code)}</code></pre>`;
     });
@@ -101,7 +120,6 @@ async function loadMarkdownTo(elementId, mdUrl) {
         return `<code>${escapeCode(code)}</code>`;
     });
 
-    // --- Aplikace patternů ---
     patterns.forEach(p => {
         if (p.pattern.startsWith("```") || p.pattern.startsWith("`")) return;
 
@@ -154,7 +172,6 @@ async function loadMarkdownTo(elementId, mdUrl) {
         }
     });
 
-    // --- Automatické odstavce ---
     markdownText = markdownText.split(/\n{2,}/).map(block => {
         block = block.trim();
         if (block.match(/^(<h\d|<ul|<ol|<blockquote|<pre|<table|<hr|<img)/)) return block;
@@ -163,6 +180,71 @@ async function loadMarkdownTo(elementId, mdUrl) {
 
     targetEl.innerHTML += markdownText;
 }
+
+const downloadHtml = (elementId, removeId = null) => {
+    const contentEl = document.getElementById(elementId);
+    if (!contentEl) {
+        console.error(`Element with id "${elementId}" not found.`);
+        return;
+    }
+
+    // Klonujeme obsah, aby nedošlo k úpravě původního DOM
+    const clone = contentEl.cloneNode(true);
+
+    // Odstraníme element s removeId, pokud existuje
+    if (removeId) {
+        const toRemove = clone.querySelector(`#${removeId}`);
+        if (toRemove) toRemove.remove();
+    }
+
+    const contentText = clone.innerHTML;    
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const themeUrl = urlParams.get('theme') || 'res/style/html.css';
+    const mdUrl = " - " + (urlParams.get('url') || '');
+    const title = "MD2F" + mdUrl;
+
+    fetch(themeUrl)
+        .then(response => {
+            if (!response.ok) throw new Error(`CSS file not found: ${themeUrl}`);
+            return response.text();
+        })
+        .then(cssText => {
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${title}</title>
+<style>
+${cssText}
+
+/* Content from element #${elementId} */
+${contentText}
+</style>
+</head>
+<body>
+<div id="${elementId}">
+${contentText}
+</div>
+</body>
+</html>
+`;
+
+            // Vytvoření blobu a stažení
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = title + ".html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        })
+        .catch(err => console.error(err));
+}
+
 
 // --- Start ---
 loadTheme();
