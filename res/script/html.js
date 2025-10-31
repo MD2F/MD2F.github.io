@@ -1,89 +1,50 @@
 const contentEl = document.getElementById('content');
-const defaultMd = '/res/md/default.md'; // root-relative
-
-function getBasePath() {
-    // pokud je index.html v podadresáři (např. /html/), vrátíme "/html/"
-    const path = window.location.pathname;
-    return path.substring(0, path.lastIndexOf('/') + 1);
-}
+const defaultMd = '../res/md/default.md';
 
 async function loadMarkdown() {
     const urlParams = new URLSearchParams(window.location.search);
     let mdUrl = urlParams.get('url');
 
     if (!mdUrl) {
-        mdUrl = defaultMd;
+        mdUrl = defaultMd
         if (document.getElementById('changelog')) {
-            loadMarkdownTo('changelog', '/changelog.md');
+            loadMarkdownTo('changelog','./changelog.md')
         }
     } else {
         if (document.getElementById('changelog')) {
-            document.getElementById('changelog').remove();
+            document.getElementById('changelog').remove()
         }
     }
 
     await loadMarkdownTo('content', mdUrl);
 }
 
-let open_raw = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    let mdUrl = urlParams.get('url') || defaultMd;
-    window.open(getBasePath() + 'raw/?url=' + mdUrl, '_self');
-}
-
-let open_html = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    let mdUrl = urlParams.get('url') || defaultMd;
-    window.open(getBasePath() + 'html/?url=' + mdUrl, '_self');
-}
-
-function escapeCode(text) {
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\*/g, "&ast;")
-        .replace(/#/g, "&#35;")
-        .replace(/~/g, "&#126;")
-        .replace(/!/g, "&#33;")
-        .replace(/\[/g, "&#91;")
-        .replace(/\]/g, "&#93;")
-        .replace(/\(/g, "&#40;")
-        .replace(/\)/g, "&#41;");
-}
-
+// ✅ Univerzální funkce pro načtení markdownu do určitého elementu
 async function loadMarkdownTo(elementId, mdUrl) {
     const targetEl = document.getElementById(elementId);
-    if (!targetEl) return;
+    if (!targetEl) {
+        console.error(`Element with ID "${elementId}" not found.`);
+        return;
+    }
 
-    // JSON patterns vždy z root
-    const patternResp = await fetch('/res/assets/markdown.json');
+    // Načtení patternů z JSON
+    const patternResp = await fetch('../res/assets/markdown.json');
     const patternJson = await patternResp.json();
     const patterns = patternJson.patterns;
 
-    // načtení MD, fallback 404
+    // Načtení Markdown souboru
     let markdownText = '';
     try {
         const resp = await fetch(mdUrl);
         if (!resp.ok) throw new Error('Not found');
         markdownText = await resp.text();
     } catch (e) {
-        const fallback = await fetch('/res/md/404.md');
+        const fallback = await fetch('../res/md/404.md');
         markdownText = await fallback.text();
     }
 
-    // escapování code bloků a inline code
-    markdownText = markdownText.replace(/```(\w*)\n([\s\S]*?)```/gm, (match, lang, code) => {
-        return `<pre><code class='${lang}'>${escapeCode(code)}</code></pre>`;
-    });
-    markdownText = markdownText.replace(/`([^`]+)`/g, (match, code) => {
-        return `<code>${escapeCode(code)}</code>`;
-    });
-
-    // ostatní patterny
+    // Aplikace patternů
     patterns.forEach(p => {
-        if (p.pattern.startsWith("```") || p.pattern.startsWith("`")) return;
-
         const regex = new RegExp(p.pattern, p.flags || 'g');
 
         if (p.pattern.startsWith('^(>+)')) {
@@ -106,6 +67,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
                 let html = "<table><thead><tr>";
                 headers.forEach(h => html += `<th>${h}</th>`);
                 html += "</tr></thead><tbody>";
+
                 const rowLines = rows.trim().split("\n");
                 rowLines.forEach(r => {
                     const cells = r.split("|").map(c => c.trim()).filter(c => c.length > 0);
@@ -114,14 +76,15 @@ async function loadMarkdownTo(elementId, mdUrl) {
                     cells.forEach(c => html += `<td>${c}</td>`);
                     html += "</tr>";
                 });
+
                 html += "</tbody></table>";
                 return html;
             });
         } else if (p.pattern.startsWith("!\\[")) {
             markdownText = markdownText.replace(regex, (m, alt, src, title) => {
                 if (!src.match(/^https?:\/\//)) {
-                    const mdBase = mdUrl.substring(0, mdUrl.lastIndexOf('/') + 1);
-                    src = mdBase + src;
+                    const baseUrl = mdUrl.substring(0, mdUrl.lastIndexOf('/') + 1);
+                    src = baseUrl + src;
                 }
                 title = title || "";
                 return `<img alt="${alt}" src="${src}" title="${title}">`;
@@ -131,14 +94,18 @@ async function loadMarkdownTo(elementId, mdUrl) {
         }
     });
 
-    // automatické odstavce
+    // --- Automatické odstavce ---
     markdownText = markdownText.split(/\n{2,}/).map(block => {
         block = block.trim();
-        if (block.match(/^(<h\d|<ul|<ol|<blockquote|<pre|<table|<hr|<img)/)) return block;
+        if (block.match(/^(<h\d|<ul|<ol|<blockquote|<pre|<table|<hr|<img)/)) {
+            return block;
+        }
         return `<p>${block}</p>`;
     }).join("\n\n");
 
-    targetEl.innerHTML += markdownText;
+    // Výstup do daného elementu
+    targetEl.innerHTML = markdownText;
 }
 
+// Spuštění hlavní funkce
 loadMarkdown();

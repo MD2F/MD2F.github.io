@@ -4,5 +4,3 @@
     <input id="md-input" placeholder="Paste URL here"/>
     <button onclick="window.open('?url=' + document.getElementById('md-input').value,'_self')">Convert</button>
 </div>
-<br>
-<br>
