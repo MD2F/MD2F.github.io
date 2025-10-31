@@ -257,6 +257,7 @@ body {
 .footer {
     text-align: center;
     padding: 12px;
+    padding-bottom: 32px;
     font-size: 14px;
 }
 

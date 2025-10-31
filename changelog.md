@@ -1,5 +1,16 @@
 ### Changelog
 
+#### Version 1.3
+
+#### Added
+
+- Added Documentation and API Documentation
+
+#### Fixed
+
+- Fixed loading local files
+- Fixed footer padding to make the website look consistent
+
 #### Version 1.2
 
 ##### Added
