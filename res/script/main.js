@@ -224,12 +224,12 @@ async function loadMarkdownTo(elementId, mdUrl) {
     }
 }
 
-const downloadHtml = (elementId, removeId = null) => {
+const downloadHtml = (elementId, removeId) => {
     const contentEl = document.getElementById(elementId);
     if (!contentEl) return console.error(`Element with id "${elementId}" not found.`);
 
     const clone = contentEl.cloneNode(true);
-    if (removeId.isArray()) {
+    if (Array.isArray(removeId)) {
         removeId.forEach(id => {
             if (id) clone.querySelector(`#${id}`)?.remove();
         });
@@ -239,7 +239,10 @@ const downloadHtml = (elementId, removeId = null) => {
     const contentText = clone.innerHTML;
     const urlParams = new URLSearchParams(window.location.search);
     const themeUrl = urlParams.get('theme') || 'res/style/html.css';
-    const mdUrl = " - " + (urlParams.get('url') || '');
+    let mdUrl = '';
+    if (urlParams.get('url')) {
+        mdUrl = " - " + urlParams.get('url')
+    }
     const title = "MD2F" + mdUrl;
 
     fetch(themeUrl)

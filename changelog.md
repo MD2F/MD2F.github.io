@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 1.4.1
+
+##### Fixed
+- Download function included non function variable
+- Fixed Download function default title
+
 #### Version 1.4
 
 #### Added
