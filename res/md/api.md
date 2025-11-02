@@ -6,7 +6,7 @@ MD2F provides simple API endpoints to access Markdown content and rendered HTML.
 
 ### Raw Markdown
 
-Retrieve the raw Markdown content from a URL.
+Retrieve the raw Markdown converted HTML content from a URL.
 
 ```
 GET md2f.github.io/raw/?url=markdown_url

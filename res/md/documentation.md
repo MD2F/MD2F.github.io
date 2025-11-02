@@ -26,16 +26,15 @@ md2f.github.io/?url=https://example.com/readme.md&theme=https://md2f.github.io/t
 
 ### Toolbar Options
 
-* **Raw** - View the raw Markdown source.
+* **Raw** - View the raw Markdown converted HTML.
 * **HTML** - View the rendered HTML.
 * **Download HTML** - Download the rendered HTML file.
-* **Download Raw** - (Currently unavailable) Download the raw Markdown file.
 
 ### API Usage
 
 MD2F also provides direct API access:
 
-* `md2f.github.io/raw/?url=markdown_url` - Retrieve the raw Markdown content.
+* `md2f.github.io/raw/?url=markdown_url` - Retrieve the raw Markdown converted HTML content.
 * `md2f.github.io/html/?url=markdown_url` - Retrieve the rendered HTML content.
 
 **API Examples:**
@@ -52,9 +51,8 @@ https://md2f.github.io/html/?url=https://example.com/sample.md&theme=https://md2
 1. Open your browser and go to `md2f.github.io/?url=your_markdown_file_url`.
 2. Optionally, add `&theme=your_theme_url` to apply a custom theme.
 3. Use the toolbar to switch between Raw and HTML views.
-4. Click 'Download HTML' to save the rendered HTML.
-5. If you want the raw Markdown, check back when 'Download Raw' becomes available.
-6. For API access, use the `/raw/` or `/html/` endpoints directly with your Markdown URL.
+4. Click 'Download' to save the rendered HTML.
+5. For API access, use the `/raw/` or `/html/` endpoints directly with your Markdown URL.
 
 ## 404 Handling
 

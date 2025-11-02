@@ -1,48 +1,59 @@
 ### Changelog
 
-#### Version 1.3
+#### Version 1.4
 
 #### Added
+- Added new Copy indicator
+- Added custom Checkbox support
 
-- Added Documentation and API Documentation
+##### Fixed
+- Fixed raw option showing raw Markdown instead of raw HTML
+- Fixed mentions for raw in *Documentation* and *API Documentation*
+- Updated `/res/md/test.md`
+- Fixed inconstancy in `changelog.md`
+- Fixed Share menu work for Mobile
+- Bug-fixed Share menu checkmark
 
-#### Fixed
+##### Removed
+- Removed unnecessary script for `raw/` being a duplicate
+
+#### Version 1.3
+
+##### Added
+- Added *Documentation* and *API Documentation*
+
+##### Fixed
 
 - Fixed loading local files
-- Fixed footer padding to make the website look consistent
+- Fixed *footer* padding to make the website look consistency
 
 #### Version 1.2
 
 ##### Added
-
 - Added downloadable HTML
-- Added custom icons for copy urls
+- Added custom icons for copy URLs
 
 ##### Fixed
-
-- Fixed copy url functions
+- Fixed copy URL functions
 
 #### Version 1.1
 
 ##### Added
-
 - Markdown file top toolbar added
-- Added `?theme=` support loading custom css
+- Added `?theme=` support loading custom CSS
 - Added ~~strike~~ support
 
 ##### Fixed
-
 - Fixed inconsistency with markdowns in files
-- Syntax was reading whilest in code blocks
+- Syntax was reading whilst in code blocks
 - Fixed layered script
 - Changelog issues fix
 
 #### Version 1.0
 
 ##### Added
-
 - Initial website preparation
-- GitHub markdown implementation
+- GitHub Markdown implementation
 - File not found fail state prepared
 
 > It's time to make something burn

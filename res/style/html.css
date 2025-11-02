@@ -8,6 +8,9 @@ body {
     margin: 20px auto;
     padding: 20px 20px 44px;
 }
+button, a {
+    cursor: pointer;
+}
 h1, h2, h3, h4, h5, h6 {
     margin: 1em 0 0.5em 0;
     font-weight: 600;
@@ -90,4 +93,47 @@ pre {
     overflow-x: auto;
     font-family: monospace;
     margin: 10px 0;
+}
+input[type="checkbox"] {
+    display: inline-block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: .9rem;
+    aspect-ratio: 1/1;
+    border-radius: .15rem;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid rgba(128,128,128,.5);
+    cursor: pointer;
+    position: relative;
+    top: .3rem;
+}
+input[type="checkbox"]:checked {
+    background: #007bff;
+    border-color: #007bff;
+}
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: .25rem;
+  top: .05rem;
+  width: .2rem;
+  height: .4rem;
+  border: solid #007bff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  border-color: white;
+}
+input[type="checkbox"]:hover {
+  background-color: #e6f0ff;
+}
+input[type="checkbox"]:hover:checked {
+  background-color: #0366d6;
+  border-color: #0366d6;
+}
+input[type="checkbox"]:disabled {
+  opacity: 1;
+}
+input[type="checkbox"]:disabled:checked::after {
+  border-color: white;
 }

@@ -3,6 +3,7 @@
     { "pattern": "\\*\\*\\*(.*?)\\*\\*\\*", "replacement": "<b><i>$1</i></b>", "flags": "g" },
     { "pattern": "\\*\\*(.*?)\\*\\*", "replacement": "<b>$1</b>", "flags": "g" },
     { "pattern": "\\*(.*?)\\*", "replacement": "<i>$1</i>", "flags": "g" },
+    { "pattern": "\\_(.*?)\\_", "replacement": "<i>$1</i>", "flags": "g" },
     { "pattern": "\\~\\~(.*?)\\~\\~", "replacement": "<s>$1</s>", "flags": "g" },
     { "pattern": "!\\[(.*?)\\]\\((.*?)(?:\\s+\"(.*?)\")?\\)", "replacement": "<img alt='$1' src='$2' title='$3'>", "flags": "g"},
     { "pattern": "!\\[(.*?)\\]\\((.*?)(?:\\s+\"(.*?)\")?\\)", "replacement": "<img alt='$1' src='$2' title='$3'>", "flags": "g" },
@@ -13,13 +14,16 @@
     { "pattern": "^([ ]*)(\\d+\\.)\\s+(.*)", "replacement": "$3", "flags": "gm" },
     { "pattern": "^\\|(.+)\\|\\n\\|([ -|]+)\\|\\n((?:\\|.*\\|\\n?)*)", "replacement": "$1|$3", "flags": "gm" },
     { "pattern": "^---$", "replacement": "<hr>", "flags": "gm" },
-    { "pattern": "^```(\\w*)\\n([\\s\\S]*?)```$", "replacement": "<pre><code class='$1'>$2</code></pre>", "flags": "gm" },
+    { "pattern": "^```(\\w*)\\n([\\s\\S]*?)```$", "replacement": "<pre><code lang='$1'>$2</code></pre>", "flags": "gm" },
     { "pattern": "\\`(.*?)\\`", "replacement": "<code>$1</code>", "flags": "g" },
     { "pattern": "^#\\s+(.*)", "replacement": "<h1>$1</h1>", "flags": "gm" },
     { "pattern": "^##\\s+(.*)", "replacement": "<h2>$1</h2>", "flags": "gm" },
     { "pattern": "^###\\s+(.*)", "replacement": "<h3>$1</h3>", "flags": "gm" },
     { "pattern": "^####\\s+(.*)", "replacement": "<h4>$1</h4>", "flags": "gm" },
     { "pattern": "^#####\\s+(.*)", "replacement": "<h5>$1</h5>", "flags": "gm" },
-    { "pattern": "^######\\s+(.*)", "replacement": "<h6>$1</h6>", "flags": "gm" }
+    { "pattern": "^######\\s+(.*)", "replacement": "<h6>$1</h6>", "flags": "gm" },
+    { "pattern": "\\[x\\]", "replacement": "<input type='checkbox' checked disabled>", "flags": "g" },
+    { "pattern": "\\[\\]", "replacement": "<input type='checkbox' disabled>", "flags": "g" },
+    { "pattern": "\\[ \\]", "replacement": "<input type='checkbox' disabled>", "flags": "g" }
   ]
 }

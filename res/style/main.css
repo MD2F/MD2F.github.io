@@ -5,6 +5,54 @@ body {
     margin: 0;
 }
 
+button, a {
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    display: inline-block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: .9rem;
+    aspect-ratio: 1/1;
+    border-radius: .15rem;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid rgba(128,128,128,.5);
+    cursor: pointer;
+    position: relative;
+    top: .3rem;
+}
+input[type="checkbox"]:checked {
+    background: #007bff;
+    border-color: #007bff;
+}
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: .25rem;
+  top: .05rem;
+  width: .2rem;
+  height: .4rem;
+  border: solid #007bff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  border-color: white;
+}
+input[type="checkbox"]:hover {
+  background-color: #e6f0ff;
+}
+input[type="checkbox"]:hover:checked {
+  background-color: #0366d6;
+  border-color: #0366d6;
+}
+input[type="checkbox"]:disabled {
+  opacity: 1;
+}
+input[type="checkbox"]:disabled:checked::after {
+  border-color: white;
+}
+
 .noselect, .content-menu {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -23,6 +71,7 @@ body {
     cursor: pointer;
     transition: .1s;
     transform: scale(1);
+    background: white;
 }
 
 .menu:active {
@@ -67,26 +116,20 @@ body {
     fill: black;
 }
 
-.content-menu-share-btn:hover > .content-menu-share, .content-menu-share-btn:focus-within > .content-menu-share {
-    padding: 12px;
-    height: 280px;
-}
-
 .content-menu-share {
+    display: none;
+    padding: 12px;
     z-index: 99;
     font-weight: 500;
     font-size: 12px;
-    height: 0;
     transition: .2s;
     overflow: hidden;
     position: absolute;
     top: 32px;
-    right: 0px;
+    right: 22px;
     background: #fff;
-    padding: 0 12px;
     border-radius: 4px;
     box-shadow: 0 5px 20px rgba(0,0,0,.1);
-    display: flex;
     flex-direction: column;
     gap: 8px;
     cursor: auto;
@@ -115,6 +158,7 @@ body {
 }
 
 .content-menu-share > div > div > button {
+    position: relative;
     background: 0;
     border: 0;
     transition: .2s;
@@ -125,8 +169,34 @@ body {
 }
 
 .content-menu-share > div > div > button > svg {
+    position: relative;
     fill: black;
     height: 18px;
+}
+
+.content-menu-share > div > div > button::before {
+    overflow: hidden;
+    position: absolute;
+    font-size: 10px;
+    background: rgba(0,0,0,.1);
+    font-weight: 500;
+    border-radius: 4px;
+    top: -20px;
+    right: 0px;
+    content: 'Copied';
+    padding: 2px 4px;
+    transition: .2s;
+    opacity: 0;
+}
+
+.content-menu-share > div > div > button:focus::before {
+    animation: showHideCopy 2s;
+}
+
+@keyframes showHideCopy {
+    0% {opacity: 0;}
+    10%,80% {opacity: 1;}
+    100% {opacity: 0;}
 }
 
 .checkButton {

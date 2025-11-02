@@ -1,120 +1,218 @@
-# Test Markdown File
+# Markdown Test File
 
-Toto je testovací Markdown soubor obsahující všechny běžné Markdown elementy.
-
----
-
-## Nadpisy
-
-# H1 Nadpis
-
-## H2 Nadpis
-
-### H3 Nadpis
-
-#### H4 Nadpis
-
-##### H5 Nadpis
-
-###### H6 Nadpis
+This file demonstrates **all major GitHub Flavored Markdown (GFM)** features for testing.
 
 ---
 
-## Textové styly
+## 1. Headings
 
-- **Tučný text**
-- *Kurzíva*
-- ***Tučný a kurzíva***
-- ~~Přeškrtnutý text~~
-- `Inline kód`
+# H1 Heading
+## H2 Heading
+### H3 Heading
+#### H4 Heading
+##### H5 Heading
+###### H6 Heading
 
 ---
 
-## Citace
+## 2. Emphasis
 
-> Toto je citace.
+- *Italic text*
+- _Italic text_
+- **Bold text**
+- __Bold text__
+- ***Bold and italic***
+- ~~Strikethrough~~
+
+---
+
+## 3. Paragraphs and Line Breaks
+
+This is a paragraph with  
+a line break.
+
+This is another paragraph.
+
+---
+
+## 4. Blockquotes
+
+> This is a simple blockquote.
 >
-> > Vnořená citace
+> > Nested blockquote.
+> >
+> > With **bold** and *italic* text.
 
 ---
 
-## Seznamy
+## 5. Lists
 
-### Neuspořádaný seznam
+### Unordered Lists
 
-- Položka 1
-- Položka 2
-  - Podpoložka 2.1
-  - Podpoložka 2.2
-- Položka 3
+- Item 1
+  - Sub-item 1.1
+    - Sub-sub-item 1.1.1
+- Item 2
+- Item 3
 
-### Uspořádaný seznam
+### Ordered Lists
 
-1. První
-2. Druhý
-3. Třetí
-   1. Vnořený první
-   2. Vnořený druhý
+1. First item
+2. Second item
+   1. Sub-item 2.1
+   2. Sub-item 2.2
+3. Third item
 
----
+### Mixed Lists
 
-## Odkazy
-
-* [Odkaz na Google](https://www.google.com)
-* [Odkaz s titulkem](https://www.google.com "Google")
-
----
-
-## Obrázky
-
-![Alt text](https://picsum.photos/200/300)
-![Alt text s titulkem](https://picsum.photos/200/300 "Titul obrázku")
+- Item A
+  1. Numbered sub-item
+  2. Another sub-item
+- Item B
 
 ---
 
-## Tabulky
+## 6. Code
 
-| Sloupec 1 | Sloupec 2 | Sloupec 3 |
-| --------- | --------- | --------- |
-| Hodnota 1 | Hodnota 2 | Hodnota 3 |
-| Hodnota A | Hodnota B | Hodnota C |
+### Inline Code
 
----
+Text with `inline code` example.
 
-## Kódové bloky
+### Code Block (fenced)
+
+```js
+// JavaScript example
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+greet("World");
+```
+
+### Code Block with Language Hint
 
 ```python
-# Python příklad
-for i in range(5):
-    print(i)
-```
-
-```javascript
-// JavaScript příklad
-for (let i = 0; i < 5; i++) {
-    console.log(i);
-}
+def greet(name):
+    print(f"Hello, {name}!")
 ```
 
 ---
 
-## Horizontální čára
+## 7. Links
+
+- [Regular link](https://github.com)
+- [Relative link](docs/readme.md)
+- Autolink: <https://www.example.com>
 
 ---
 
-## Checklist
+## 8. Images
 
-* [x] Dokončeno
-* [ ] Nedokončeno
+![Alt text](https://picsum.photos/300/200 "Placeholder Image")
 
----
-
-## Emoji
-
-🙂 😎 🚀 🎉 ❤️
+Relative image:  
+![Local Image](../assets/img/duck.png)
 
 ---
 
-## Inline HTML
+## 9. Tables
 
-<p style="color: red;">Toto je červený text v HTML uvnitř Markdown.</p>
+| Name      | Age | City         |
+|------------|-----|--------------|
+| Alice      | 25  | New York     |
+| Bob        | 30  | Los Angeles  |
+| **Charlie** | *22* | London       |
+
+### Table with Alignment
+
+| Left Align | Center Align | Right Align |
+|:------------|:-------------:|-------------:|
+| One         | Two           | Three        |
+| Four        | Five          | Six          |
+
+---
+
+## 10. Task Lists
+
+- [x] Write Markdown
+- [ ] Test the parser
+- [ ] Fix bugs
+  - [x] Subtask done
+
+---
+
+## 11. Horizontal Rules
+
+---
+***
+___
+
+---
+
+## 12. HTML Support
+
+<span style="color: red;">This text is red (if HTML is supported).</span>
+
+<details>
+<summary>Expandable section</summary>
+This is hidden until expanded.
+</details>
+
+---
+
+## 13. Footnotes
+
+Here’s a sentence with a footnote.[^1]
+
+[^1]: This is the footnote text.
+
+---
+
+## 14. Emoji
+
+:smile: :rocket: :+1: :coffee: :sparkles:
+
+---
+
+## 15. Definition Lists (GFM extension)
+
+Term 1  
+: Definition for term 1
+
+Term 2  
+: Definition for term 2  
+: Another definition for term 2
+
+---
+
+## 16. Math (if supported)
+
+Inline math: \(E = mc^2\)
+
+Block math:
+
+```math
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+```
+
+---
+
+## 17. Escaping
+
+\*Not italic\*  
+\# Not a heading  
+\\ Backslash test
+
+---
+
+## 18. Nested Formatting
+
+**Bold *with italic* text**
+
+> Quoted text with **bold** and `inline code`.
+
+1. List item with [link](#)
+   - and an image: ![img](https://picsum.photos/300/200)
+
+---
+
+_End of Test Markdown File_

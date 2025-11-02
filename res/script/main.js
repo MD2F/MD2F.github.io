@@ -2,6 +2,7 @@ const contentEl = document.getElementById('content');
 const defaultMd = '/res/md/default.md';
 const baseUrl = "https://md2f.github.io";
 const checkSvg = '<svg class="checkButton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z"/></svg>';
+const copySvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M352 528L128 528C119.2 528 112 520.8 112 512L112 288C112 279.2 119.2 272 128 272L176 272L176 224L128 224C92.7 224 64 252.7 64 288L64 512C64 547.3 92.7 576 128 576L352 576C387.3 576 416 547.3 416 512L416 464L368 464L368 512C368 520.8 360.8 528 352 528zM288 368C279.2 368 272 360.8 272 352L272 128C272 119.2 279.2 112 288 112L512 112C520.8 112 528 119.2 528 128L528 352C528 360.8 520.8 368 512 368L288 368zM224 352C224 387.3 252.7 416 288 416L512 416C547.3 416 576 387.3 576 352L576 128C576 92.7 547.3 64 512 64L288 64C252.7 64 224 92.7 224 128L224 352z"/></svg>'
 
 const copyFrom = (elementId, buttonEl) => {
     const inputEl = document.getElementById(elementId);
@@ -10,13 +11,41 @@ const copyFrom = (elementId, buttonEl) => {
     navigator.clipboard.writeText(value)
         .then(() => {
             if (buttonEl) {
-                const originalSvg = buttonEl.innerHTML;
                 buttonEl.innerHTML = checkSvg;
-                setTimeout(() => buttonEl.innerHTML = originalSvg, 1000);
+                setTimeout(() => buttonEl.innerHTML = copySvg, 1000);
             }
         })
         .catch(err => console.error("Copy error: ", err));
 };
+
+const replaceAll = (content, toReplace, replaceWith) => {
+    if (Array.isArray(toReplace) && Array.isArray(replaceWith)) {
+        if (toReplace.length !== replaceWith.length) {
+            console.error("replaceAll: both arrays must have the same length");
+            return content;
+        }
+        let result = content;
+        for (let i = 0; i < toReplace.length; i++) {
+            const search = toReplace[i];
+            const replacement = replaceWith[i];
+            const regex = new RegExp(escapeRegExp(search), "g");
+            result = result.replace(regex, replacement);
+        }
+        return result;
+    }
+
+    if (typeof toReplace === "string" && typeof replaceWith === "string") {
+        const regex = new RegExp(escapeRegExp(toReplace), "g");
+        return content.replace(regex, replaceWith);
+    }
+
+    console.error("replaceAll: invalid argument types");
+    return content;
+}
+
+function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 function loadTheme() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -34,22 +63,15 @@ function getBasePath() {
     return path.substring(0, path.lastIndexOf('/') + 1);
 }
 
-// ✅ Nová funkce pro korektní řešení relativních cest
 function resolveMdPath(mdUrl) {
     if (!mdUrl) return defaultMd;
-
-    // 1️⃣ Pokud začíná http nebo https → necháme beze změny
     if (/^https?:\/\//i.test(mdUrl)) return mdUrl;
-
-    // 2️⃣ Pokud začíná "/" → root v doméně
     if (mdUrl.startsWith("/")) return mdUrl;
 
-    // 3️⃣ Normalizace: pokud nezačíná "./" nebo "../", přidej "./"
     if (!mdUrl.startsWith("./") && !mdUrl.startsWith("../")) {
         mdUrl = "./" + mdUrl;
     }
 
-    // 4️⃣ Pokud jsme uvnitř podsložky jako /html/, /raw/, /print/, přepočítáme relativní cestu
     const path = window.location.pathname;
     let base = getBasePath();
     if (path.includes('/html/') || path.includes('/raw/') || path.includes('/print/')) {
@@ -58,7 +80,6 @@ function resolveMdPath(mdUrl) {
         mdUrl = '../' + mdUrl;
     }
 
-    // 5️⃣ Přepočítáme absolutní cestu vůči aktuální stránce
     return new URL(mdUrl, window.location.origin + base).href;
 }
 
@@ -194,7 +215,13 @@ async function loadMarkdownTo(elementId, mdUrl) {
             : `<p>${block.trim()}</p>`)
         .join("\n\n");
 
-    targetEl.innerHTML += markdownText;
+    const mainUrl = window.location.origin + window.location.pathname;
+
+    if (mainUrl.includes('/raw/')) {
+        targetEl.innerHTML = replaceAll(markdownText, ['<', '>'], ['&lt;', '&gt;']);
+    } else {
+        targetEl.innerHTML += markdownText;
+    }
 }
 
 const downloadHtml = (elementId, removeId = null) => {
@@ -202,7 +229,12 @@ const downloadHtml = (elementId, removeId = null) => {
     if (!contentEl) return console.error(`Element with id "${elementId}" not found.`);
 
     const clone = contentEl.cloneNode(true);
-    if (removeId) clone.querySelector(`#${removeId}`)?.remove();
+    if (removeId.isArray()) {
+        removeId.forEach(id => {
+            if (id) clone.querySelector(`#${id}`)?.remove();
+        });
+    } else
+        if (removeId) clone.querySelector(`#${removeId}`)?.remove();
 
     const contentText = clone.innerHTML;
     const urlParams = new URLSearchParams(window.location.search);
