@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 1.4.2
+
+##### Fixed
+- Home button now works relatively on URL
+- Fixed `/res/style/format.css` to be custom style for HTML tags
+
 #### Version 1.4.1
 
 ##### Fixed
