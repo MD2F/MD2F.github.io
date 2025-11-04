@@ -127,3 +127,31 @@ input[type="checkbox"]:disabled {
 input[type="checkbox"]:disabled:checked::after {
   border-color: white;
 }
+.emoji {
+    display: inline-block;
+    height: 1em;
+    margin: 0;
+    position: relative;
+    top: .1em;
+    padding: 0;
+}
+.footnote {
+    position: relative;
+    display: inline-block;
+    font-weight: 600;
+    font-size: .6em;
+    top: -0.6em;
+}
+.footnote-ol {
+    color: #666;
+    font-size: .9em;
+    margin-left: 1.1em;
+}
+.footnote-ol > li > a {
+    padding-left: .2em;
+    position: relative;
+    display: inline-block;
+    font-size: .8em;
+    top: .1em;
+    text-decoration: none;
+}

@@ -1,5 +1,16 @@
 ### Changelog
 
+#### Version 1.5
+
+##### Added 
+- Added functional [relative paths](./res/md/test.md) for links
+- Added GitHub emoji support :+1:
+- Added footnote support[^1]
+
+##### Fixed
+- Fixed horizontal rule `___`, `***`, `---`
+- Fixed markdown and CSS for markdowns
+
 #### Version 1.4.2
 
 ##### Fixed

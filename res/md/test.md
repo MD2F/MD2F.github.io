@@ -161,15 +161,16 @@ This is hidden until expanded.
 
 ## 13. Footnotes
 
-Here’s a sentence with a footnote.[^1]
+Here’s a sentence with a footnote[^1]
 
 [^1]: This is the footnote text.
 
 ---
 
-## 14. Emoji
+## 14. :smile: Emoji
 
 :smile: :rocket: :+1: :coffee: :sparkles:
+- Emoji inline with text :rage1:
 
 ---
 

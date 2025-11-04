@@ -47,6 +47,37 @@ function escapeRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function fixRelativeLinks(html, mdUrl) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    const links = tempDiv.querySelectorAll('a[href]');
+    links.forEach(a => {
+        let href = a.getAttribute('href');
+        if (!href) return;
+
+        // Absolutní odkazy necháme beze změny
+        if (/^https?:\/\//i.test(href)) return;
+
+        // Vypočítáme relativní cestu vůči mdUrl
+        let base = mdUrl.substring(0, mdUrl.lastIndexOf('/') + 1);
+        let newHref = href;
+
+        // Pokud odkaz nevede na .md, přidáme readme.md
+        if (!href.endsWith('.md')) {
+            if (!href.endsWith('/')) newHref += '/';
+            newHref += 'README.md';
+        }
+
+        // Upravený odkaz = aktuální stránka + ?url= bez encode
+        const currentPage = window.location.origin + window.location.pathname;
+        a.setAttribute('href', `${currentPage}?url=${base}${newHref}`);
+    });
+
+    return tempDiv.innerHTML;
+}
+
+
 function loadTheme() {
     const urlParams = new URLSearchParams(window.location.search);
     const theme = urlParams.get('theme');
@@ -147,6 +178,16 @@ async function loadMarkdownTo(elementId, mdUrl) {
     const patternJson = await patternResp.json();
     const patterns = patternJson.patterns;
 
+    let emojiMap = {};
+    try {
+        const emojiResp = await fetch('https://api.github.com/emojis');
+        if (emojiResp.ok) {
+            emojiMap = await emojiResp.json(); // { "smile": "url", ... }
+        }
+    } catch(e) {
+        console.warn("Couldn't find emoji: ", e);
+    }
+
     let markdownText = '';
     try {
         const resp = await fetch(mdUrl);
@@ -164,6 +205,14 @@ async function loadMarkdownTo(elementId, mdUrl) {
         `<code>${escapeCode(code)}</code>`
     );
 
+    markdownText = markdownText.replace(/:([a-zA-Z0-9_+-]+):/g, (match, name) => {
+        if (emojiMap[name]) {
+            return `<img src="${emojiMap[name]}" alt="${name}" class="emoji"/>`;
+        } else {
+            return match;
+        }
+    });
+
     patterns.forEach(p => {
         if (p.pattern.startsWith("```") || p.pattern.startsWith("`")) return;
         const regex = new RegExp(p.pattern, p.flags || 'g');
@@ -172,16 +221,77 @@ async function loadMarkdownTo(elementId, mdUrl) {
             markdownText = markdownText.replace(regex, (m, arrows, text) =>
                 "<blockquote>".repeat(arrows.length) + text.trim() + "</blockquote>".repeat(arrows.length)
             );
+
         } else if (p.pattern.startsWith("^([ ]*)([-*+])")) {
-            markdownText = markdownText.replace(regex, (m, space, bullet, text) => {
-                const level = Math.floor(space.length / 2);
-                return "<ul>".repeat(level + 1) + "<li>" + text.trim() + "</li>" + "</ul>".repeat(level + 1);
+            let lines = markdownText.split("\n");
+            let result = "";
+            let listStack = [];
+
+            lines.forEach(line => {
+                const match = line.match(/^([ ]*)([-*+])\s+(.*)/);
+                if (match) {
+                    const [ , space, , text ] = match;
+                    const level = Math.floor(space.length / 2);
+
+                    while (listStack.length < level + 1) {
+                        result += "<ul>";
+                        listStack.push("ul");
+                    }
+                    while (listStack.length > level + 1) {
+                        result += "</ul>";
+                        listStack.pop();
+                    }
+
+                    result += `<li>${text.trim()}</li>`;
+                } else {
+                    while (listStack.length > 0) {
+                        result += `</${listStack.pop()}>`;
+                    }
+                    result += line + "\n";
+                }
             });
+
+            while (listStack.length > 0) {
+                result += `</${listStack.pop()}>`;
+            }
+
+            markdownText = result;
+
         } else if (p.pattern.startsWith("^([ ]*)(\\d+\\.)")) {
-            markdownText = markdownText.replace(regex, (m, space, num, text) => {
-                const level = Math.floor(space.length / 2);
-                return "<ol>".repeat(level + 1) + "<li>" + text.trim() + "</li>" + "</ol>".repeat(level + 1);
+            let lines = markdownText.split("\n");
+            let result = "";
+            let listStack = [];
+
+            lines.forEach(line => {
+                const match = line.match(/^([ ]*)(\d+\.)\s+(.*)/);
+                if (match) {
+                    const [ , space, , text ] = match;
+                    const level = Math.floor(space.length / 2);
+
+                    while (listStack.length < level + 1) {
+                        result += "<ol>";
+                        listStack.push("ol");
+                    }
+                    while (listStack.length > level + 1) {
+                        result += "</ol>";
+                        listStack.pop();
+                    }
+
+                    result += `<li>${text.trim()}</li>`;
+                } else {
+                    while (listStack.length > 0) {
+                        result += `</${listStack.pop()}>`;
+                    }
+                    result += line + "\n";
+                }
             });
+
+            while (listStack.length > 0) {
+                result += `</${listStack.pop()}>`;
+            }
+
+            markdownText = result;
+
         } else if (p.pattern.startsWith("^\\|")) {
             markdownText = markdownText.replace(regex, (m, headerLine, sepLine, rows) => {
                 const headers = headerLine.split("|").map(h => h.trim()).filter(Boolean);
@@ -195,6 +305,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
                 });
                 return html + "</tbody></table>";
             });
+
         } else if (p.pattern.startsWith("!\\[")) {
             markdownText = markdownText.replace(regex, (m, alt, src, title) => {
                 if (!src.match(/^https?:\/\//)) {
@@ -203,6 +314,7 @@ async function loadMarkdownTo(elementId, mdUrl) {
                 }
                 return `<img alt="${alt}" src="${src}" title="${title || ""}">`;
             });
+
         } else {
             markdownText = markdownText.replace(regex, p.replacement);
         }
@@ -215,14 +327,16 @@ async function loadMarkdownTo(elementId, mdUrl) {
             : `<p>${block.trim()}</p>`)
         .join("\n\n");
 
-    const mainUrl = window.location.origin + window.location.pathname;
+    markdownText = fixRelativeLinks(markdownText, mdUrl);
 
+    const mainUrl = window.location.origin + window.location.pathname;
     if (mainUrl.includes('/raw/')) {
         targetEl.innerHTML = replaceAll(markdownText, ['<', '>'], ['&lt;', '&gt;']);
     } else {
         targetEl.innerHTML += markdownText;
     }
 }
+
 
 const downloadHtml = (elementId, removeId) => {
     const contentEl = document.getElementById(elementId);
