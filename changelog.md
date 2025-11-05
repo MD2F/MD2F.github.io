@@ -1,5 +1,10 @@
 ### Changelog
 
+#### Version 1.5.1
+
+##### Fixed
+- Fixed relative links in default markdown file for the site
+
 #### Version 1.5
 
 ##### Added 

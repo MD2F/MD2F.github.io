@@ -7,5 +7,5 @@
 <br>
 <br>
 <div style="text-align: center">
-    <a href='/?url=./res/md/documentation.md'>Documentation</a> | <a href='/?url=./changelog.md'>Changelog</a> | <a href='/?url=./res/md/api.md'>API</a>
+    <a href='./documentation.md'>Documentation</a> | <a href='../../changelog.md'>Changelog</a> | <a href='./api.md'>API</a>
 </div>
