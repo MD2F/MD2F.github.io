@@ -56,22 +56,22 @@ function fixRelativeLinks(html, mdUrl) {
         let href = a.getAttribute('href');
         if (!href) return;
 
-        // Absolutní odkazy necháme beze změny
         if (/^https?:\/\//i.test(href)) return;
 
-        // Vypočítáme relativní cestu vůči mdUrl
         let base = mdUrl.substring(0, mdUrl.lastIndexOf('/') + 1);
         let newHref = href;
 
-        // Pokud odkaz nevede na .md, přidáme readme.md
-        if (!href.endsWith('.md')) {
-            if (!href.endsWith('/')) newHref += '/';
-            newHref += 'README.md';
+        if (!href.includes('#')) {
+            if (!href.endsWith('.md')) {
+                if (!href.endsWith('/')) newHref += '/';
+                    newHref += 'README.md';
+            }
         }
 
-        // Upravený odkaz = aktuální stránka + ?url= bez encode
         const currentPage = window.location.origin + window.location.pathname;
-        a.setAttribute('href', `${currentPage}?url=${base}${newHref}`);
+        if (href[0] !== '#') {
+            a.setAttribute('href', `${currentPage}?url=${base}${newHref}`);
+        }
     });
 
     return tempDiv.innerHTML;

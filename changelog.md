@@ -4,6 +4,7 @@
 
 ##### Fixed
 - Fixed relative links in default markdown file for the site
+- Fixed relative '#' in links
 
 #### Version 1.5
 
